@@ -3,7 +3,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { VictoryLine } from "victory-native";
 import CoinItem from "./components/CoinItem";
+import BottomNavigation from "./components/BottomNavigation";
+
 import SearchBar from "react-native-dynamic-search-bar";
+import { LogIn, LogOut, PlusCircle, Repeat } from "react-native-feather";
 
 import {
   View,
@@ -142,69 +145,88 @@ const App = () => {
         <SearchBar
           fontColor="#c6c6c6"
           iconColor="#c6c6c6"
-          shadowColor="#282828"
           cancelIconColor="#c6c6c6"
-          backgroundColor="#fff"
           placeholder="Search here"
           onChangeText={(text) => text && setSearch(text)}
           onPressCancel={() => {
             setSearch();
           }}
-          style={{ width: "103%" }}
+          style={{ width: "100%" }}
         />
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={["#64253d", "#cd6c92"]}
+
+        <View
           style={{
-            height: "100%",
+            height: Dimensions.get("window").height * 0.48,
             width: "100%",
             marginTop: 0,
             borderTopLeftRadius: 48,
             borderBottomLeftRadius: 48,
           }}
         >
-          <View
+          <FlatList
+            style={styles.list}
+            data={coins.filter(
+              (coin) =>
+                coin.name.toLowerCase().includes(search.toLocaleLowerCase()) ||
+                coin.symbol
+                  .toLocaleLowerCase()
+                  .includes(search.toLocaleLowerCase())
+            )}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => <CoinItem coin={item} />}
+            refreshing={refreshing}
+            onRefresh={async () => {
+              setRefreshing(true);
+              await loadData();
+              setRefreshing(false);
+            }}
+          />
+        </View>
+      </SafeAreaView>
+      <View style={styles.container}>
+        <StatusBar backgroundColor="#fff" />
+        <View style={styles.timeWrapper}>
+          <Text
             style={{
-              height: Dimensions.get("window").height * 0.48,
-              width: "100%",
-              marginTop: 0,
-              borderTopLeftRadius: 48,
-              borderBottomLeftRadius: 48,
+              marginRight: 5,
+              fontWeight: "bold",
+              color: "black",
+              fontSize: 17,
             }}
           >
-            <FlatList
-              style={styles.list}
-              data={coins.filter(
-                (coin) =>
-                  coin.name
-                    .toLowerCase()
-                    .includes(search.toLocaleLowerCase()) ||
-                  coin.symbol
-                    .toLocaleLowerCase()
-                    .includes(search.toLocaleLowerCase())
-              )}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => <CoinItem coin={item} />}
-              refreshing={refreshing}
-              onRefresh={async () => {
-                setRefreshing(true);
-                await loadData();
-                setRefreshing(false);
-              }}
-            />
-          </View>
-          <View style={styles.container}>
-            <StatusBar backgroundColor="#0e0275" />
-          </View>
-          <View style={styles.timeWrapper}>
-            <Text style={[styles.time]}>Send</Text>
-            <Text style={[styles.time]}>Receive </Text>
-            <Text style={[styles.time]}>Buy </Text>
-            <Text style={[styles.time]}>Swap </Text>
-          </View>
-        </LinearGradient>
-      </SafeAreaView>
+            Send
+          </Text>
+          <LogOut
+            stroke="black"
+            strokeWidth={2}
+            fill="#fff"
+            width={20}
+            height={20}
+          />
+          <Text style={[styles.time]}>Buy</Text>
+          <PlusCircle
+            stroke="black"
+            strokeWidth={2}
+            fill="#fff"
+            width={20}
+            height={20}
+          />
+          <Text style={[styles.time]}>Receive</Text>
+          <LogIn
+            stroke="black"
+            strokeWidth={2}
+            fill="#fff"
+            width={20}
+            height={20}
+          />
+
+          {/*
+                    <BottomNavigation />
+
+          
+                */}
+        </View>
+      </View>
     </>
   );
 };
@@ -213,7 +235,7 @@ const chartConfig = {
   padding: 100,
   backgroundGradientFromOpacity: 0,
   backgroundGradientToOpacity: 0,
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+  color: (opacity = 1) => `rgba(26, 255, 176, ${opacity})`,
   strokeWidth: 2, // optional, default 3
   barPercentage: 1,
   useShadowColorFromDataset: false, // optional
@@ -247,7 +269,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   time: {
-    margin: 10,
+    marginLeft: 55,
+    marginRight: 5,
+    fontWeight: "bold",
+    color: "black",
+    fontSize: 17,
   },
   header: {
     position: "absolute",
@@ -269,6 +295,22 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "100%",
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "black",
+  },
+  text: {
+    fontSize: 20,
+    lineHeight: 31,
+    fontWeight: "bold",
+    letterSpacing: 0.5,
+    color: "white",
   },
 });
 
