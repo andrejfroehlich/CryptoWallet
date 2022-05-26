@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 import { VictoryLine } from "victory-native";
-import CoinItem from "./components/CoinItem";
-import ViewPercent from "./components/ViewPercent";
+import CoinItem from "./CoinItem";
+import ViewPercent from "./ViewPercent";
 
-import BottomNavigation from "./components/BottomNavigation";
+import BottomNavigation from "./BottomNavigation";
 
 import SearchBar from "react-native-dynamic-search-bar";
 import {
@@ -16,7 +16,6 @@ import {
   CornerLeftUp,
   CornerRightDown,
   CornerLeftDown,
-  Repeat,
 } from "react-native-feather";
 
 import {
@@ -47,11 +46,11 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import ProfileHeader from "react-native-profile-header";
 
-const coloredNotification = require("./assets/notification-colored.png");
-const notification = require("./assets/notification.png");
-const profil = require("./assets/profil.png");
+const coloredNotification = require("../assets/notification-colored.png");
+const notification = require("../assets/notification.png");
+const profil = require("../assets/profil.png");
 
-const App = () => {
+const HomeScreenWallet = ({ navigation }) => {
   const [notificationIcon, setNotificationIcon] = React.useState(notification);
   const [data, setData] = useState();
   const [period, setPeriod] = useState(30);
@@ -113,24 +112,7 @@ const App = () => {
               }}
             >
               $34.000,00
-              <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: "300",
-                  color: "#fff",
-                  opacity: 0.7,
-                  marginLeft: 20,
-                }}
-              >
-                <Repeat
-                  stroke="white"
-                  strokeWidth={2}
-                  width={22.5}
-                  height={22.5}
-                />
-              </Text>
             </Text>
-
             <Text style={{ color: "#6ef216", marginLeft: "75%", fontSize: 21 }}>
               + 4.78%
             </Text>
@@ -191,7 +173,11 @@ const App = () => {
             else setNotificationIcon(notification);
           }}
         />
-        <TouchableOpacity>{renderContent()}</TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("HomeScreenCrypto")}
+        >
+          {renderContent()}
+        </TouchableOpacity>
 
         <SearchBar
           fontColor="#c6c6c6"
@@ -365,4 +351,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default HomeScreenWallet;
